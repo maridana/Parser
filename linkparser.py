@@ -11,9 +11,9 @@ from bs4 import BeautifulSoup as BS
 
 try:
     with open('links.json', 'r') as file_list:
-        link_list = json.load(file_list)
+        link_dict = json.load(file_list)
 except:
-    link_list = []
+    link_dict = {}
 
 try:
     file = open('last_linksession.txt', 'r')
@@ -42,7 +42,7 @@ while limit <= 50:
         #print(number)
         link1 = link.select_one('a').get('href')
         #print(link1)
-        link_list.append({ number : link1 })
+        link_dict.update({ number : link1 })
 
         number += 1
 
@@ -67,4 +67,4 @@ while limit <= 50:
     time.sleep(3)
 
     with open('links.json', 'w') as file_list:
-        json.dump(link_list, file_list, indent=4)
+        json.dump(link_dict, file_list, indent=4)
