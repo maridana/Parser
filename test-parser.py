@@ -12,8 +12,15 @@ import json
 import re
 import requests
 import time
+import sys
 
 from bs4 import BeautifulSoup as BS
+
+try:
+    with open('links.json', 'r') as database:
+        database = json.load(database)
+except:
+    sys.exit()
 
 try:
     with open('data.json', 'r') as file_list:
@@ -30,9 +37,12 @@ except:
 
 page = session + 1
 
-while page <= 10: # Число страниц - число анимешек, которое обрабатывает программа. Место с хардкодом.
+while page <= 100: # Число страниц - число анимешек, которое обрабатывает программа. Место с хардкодом.
 
-    r = requests.get('https://myanimelist.net/anime/' + str(page))
+    link = database[str(session)]
+    #print(link)
+
+    r = requests.get(link)
     html = BS(r.content, 'html.parser')
 
     not_found = '' # Строка, хранящая то, страница 404 у нас или нет.
@@ -81,8 +91,7 @@ while page <= 10: # Число страниц - число анимешек, к�
                            'genres': list1,
                            'rating': float(score1),
                            'image': image1,
-                           'myAnimeListLink':
-                           'https://myanimelist.net/anime/' + str(page)})
+                           'myAnimeListLink': link})
     
     file = open('last_session.txt', 'w')
     file.write(str(page))
